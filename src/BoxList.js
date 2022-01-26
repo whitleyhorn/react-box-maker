@@ -10,7 +10,8 @@ class BoxList extends Component {
             boxes: []
         };
 
-        this.makeNewBox.bind(this);
+        this.makeNewBox = this.makeNewBox.bind(this);
+        this.removeBox = this.removeBox.bind(this);
     }
 
     makeNewBox(box){
@@ -20,13 +21,18 @@ class BoxList extends Component {
         });
     }
 
+    removeBox(key){
+        let newBoxes = this.state.boxes.filter(b => b.uuid !== key);
+        this.setState({ boxes: newBoxes });
+    }
+
     render() {
         return (
             <div className="BoxList">
                 <NewBoxForm 
-                    makeNewBox={ this.makeNewBox.bind(this) } 
+                    makeNewBox={ this.makeNewBox } 
                 />
-                { this.state.boxes.map(renderBox) }
+                { this.state.boxes.map(renderBox.bind(this)) }
             </div>
         );
         
@@ -36,7 +42,9 @@ class BoxList extends Component {
                     height={ box.height } 
                     width={ box.width } 
                     backgroundColor={ box.backgroundColor } 
+                    removeBox={ this.removeBox }
                     key={ box.uuid }
+                    uuid={ box.uuid }
                 />;
         }
     }
